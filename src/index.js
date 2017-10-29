@@ -1,121 +1,172 @@
 import TextureSynthesis from './TextureSynthesis'
 
 const startTime = new Date()
-const img = new Image()
-img.src = 'resources/3.jpg'
-img.onload = () => {
+const oriImg = new Image()
+oriImg.src = 'resources/real_wall_resize.jpg'
+oriImg.onload = () => {
+
   const ts1 = new TextureSynthesis()
 
-  const r = 512 / img.width
 
-  ts1.synthesis(img, r, {
-    radial: true,
-    withEdge: true,
-    debug: true
-  }).then((result) => {
-    document.body.appendChild(result)
-
-    console.log( ((new Date()) - startTime) / 1000 + 's')
-  })
-
-  const ts2 = new TextureSynthesis()
+  const r = 512 / oriImg.width
   
-  ts2.synthesis(img, r, {
-    radial: false,
-    withEdge: true,
-    debug: true
-  }).then((result) => {
-    document.body.appendChild(result)
+    ts1.synthesis(oriImg, r, {
+      radial: false,
+      withEdge: false,
+      debug: true
+    }).then((result) => {
 
-    console.log( ((new Date()) - startTime) / 1000 + 's')
-  })
+      ts1.TILE_SIZE.w = 60
+      ts1.TILE_SIZE.h = 60
+      document.body.appendChild(result)
+  
+      console.log( ((new Date()) - startTime) / 1000 + 's')
+    })
+
+  // const r = 512 / oriImg.width
+  // ts.resizeImage(oriImg, r).then((resizedImg) => {
+  //   const targetArea = ts.getTargetArea(resizedImg)
+  //   ts.edgeDetector.detect(resizedImg).then((img) => {
+        
+  //       //top
+  //       let fromX = 1
+  //       let toX = img.width
+  //       let fromY = 0
+  //       let toY = fromY + 1
+  //       const scanTopPatchSize = {
+  //         x: 0,
+  //         y: 0,
+  //         w: targetArea.x,
+  //         h: targetArea.y
+  //       }
+  //       const scanTopSrcPatch = cloneImageDataWithRange(img, scanTopPatchSize.x, scanTopPatchSize.y, scanTopPatchSize.w, scanTopPatchSize.h)
+        
+  //       const topBlocks = scanPattern(img, scanTopSrcPatch, scanTopPatchSize, fromX, toX, fromY, toY)
+  
+  //       //right
+  //       fromX = targetArea.x + targetArea.w
+  //       toX = fromX + 1
+  //       fromY = 1
+  //       toY = img.height
+  //       const scanRightPatchSize = {
+  //         x: (targetArea.x + targetArea.w),
+  //         y: 0,
+  //         w: img.width - (targetArea.x + targetArea.w),
+  //         h: targetArea.y
+  //       }
+  //       const scanRightSrcPatch = cloneImageDataWithRange(img, scanRightPatchSize.x, scanRightPatchSize.y, scanRightPatchSize.w, scanRightPatchSize.h)
+        
+  //       const rightBlocks = scanPattern(img, scanRightSrcPatch, scanRightPatchSize, fromX, toX, fromY, toY)
+  
+  //       //bottom
+  //       fromX = 1
+  //       toX = img.width
+  //       fromY = targetArea.y + targetArea.h
+  //       toY = fromY + 1
+  //       const scanBottomPatchSize = {
+  //         x: 0,
+  //         y: targetArea.y + targetArea.h,
+  //         w: targetArea.x,
+  //         h: img.height - (targetArea.y + targetArea.h)
+  //       }
+  //       const scanBottomSrcPatch = cloneImageDataWithRange(img, scanBottomPatchSize.x, scanBottomPatchSize.y, scanBottomPatchSize.w, scanBottomPatchSize.h)
+        
+  //       const bottomBlocks = scanPattern(img, scanBottomSrcPatch, scanBottomPatchSize, fromX, toX, fromY, toY)
+  
+  //       //left
+  //       fromX = 0
+  //       toX = fromX + 1
+  //       fromY = 1
+  //       toY = img.height
+  //       const scanLeftPatchSize = scanTopPatchSize
+  //       const scanLeftSrcPatch = cloneImageDataWithRange(img, scanLeftPatchSize.x, scanLeftPatchSize.y, scanLeftPatchSize.w, scanLeftPatchSize.h)
+        
+  //       const leftBlocks = scanPattern(img, scanLeftSrcPatch, scanLeftPatchSize, fromX, toX, fromY, toY)
+      
+      
+      
+      
+  //       //debug
+      
+  //       const canvas = document.createElement('canvas')
+  //       canvas.width = img.width
+  //       canvas.height = img.height
+  //       document.body.appendChild(canvas)
+        
+  //       const context = canvas.getContext('2d')
+      
+  //       context.drawImage(img, 0, 0)
+      
+  //       // context.fillStyle = 'rgba(0, 255, 0, 0.3)' 
+  //       // context.fillRect(scanTopPatchSize.x, scanTopPatchSize.y, scanTopPatchSize.w, scanTopPatchSize.h)
+  
+  //       // context.fillStyle = 'rgba(0, 255, 0, 0.3)' 
+  //       // context.fillRect(scanRightPatchSize.x, scanRightPatchSize.y, scanRightPatchSize.w, scanRightPatchSize.h)
+        
+  //       // context.fillStyle = 'rgba(0, 255, 0, 0.3)' 
+  //       // context.fillRect(scanBottomPatchSize.x, scanBottomPatchSize.y, scanBottomPatchSize.w, scanBottomPatchSize.h)
+        
+  //       // context.fillStyle = 'rgba(0, 255, 0, 0.3)' 
+  //       // context.fillRect(scanLeftPatchSize.x, scanLeftPatchSize.y, scanLeftPatchSize.w, scanLeftPatchSize.h)
+        
+  //       // for (let i = 0; i < 20; i++) {
+  //       //   //top
+  //       //   context.fillStyle = 'rgba(255, 0, 0, 0.3)' 
+  //       //   context.fillRect(topBlocks[i].x, topBlocks[i].y, topBlocks[i].w, topBlocks[i].h)
+  
+  //       //   //right
+  //       //   context.fillStyle = 'rgba(0, 0, 255, 0.3)' 
+  //       //   context.fillRect(rightBlocks[i].x, rightBlocks[i].y, rightBlocks[i].w, rightBlocks[i].h)
+  
+  //       //   //bottom
+  //       //   context.fillStyle = 'rgba(255, 0, 0, 0.3)' 
+  //       //   context.fillRect(bottomBlocks[i].x, bottomBlocks[i].y, bottomBlocks[i].w, bottomBlocks[i].h)
+  
+  //       //   //left
+  //       //   context.fillStyle = 'rgba(0, 0, 255, 0.3)' 
+  //       //   context.fillRect(leftBlocks[i].x, leftBlocks[i].y, leftBlocks[i].w, leftBlocks[i].h)
+  //       // }
+  //   })
+  // })
 }
 
+function scanPattern(img, srcPatch, scanSize, fromX, toX, fromY, toY) {
+  const blocks = []
 
-// const targetArea = {
-//   w: 273,
-//   h: 154,
-//   x: 123,
-//   y: 75
-// }
-// const TILE_SIZE = {w: 30, h: 30}
-// const OVERLAP_AREA = {w: 12, h: 12}
+  const { w, h } = scanSize
 
-// const points = getRadialPoints(targetArea)
-
-// points.forEach((p, i) => {
-//   drawBox(p[0], p[1], i)
-// })
-
-// function drawBox(x, y, i) {
-//   const box = document.createElement('div')    
-//   box.style.width = `${TILE_SIZE.w}px`
-//   box.style.height = `${TILE_SIZE.h}px`
-//   box.style.border = '1px solid #0f0'
-//   box.style.position = 'absolute'
-//   box.style.fontSize = '10px'
-//   box.style.color = '#0f0'
-
-//   box.style.top = `${y}px`
-//   box.style.left = `${x}px`
-
-//   box.innerHTML = i
-//   i++
-
-//   document.body.appendChild(box)  
-// }
-
-
-// function getRadialPoints(targetArea) {
+  for(let y = fromY; y < toY; y++) {
+    for(let x = fromX; x < toX; x++) {
+      const compPatch = cloneImageDataWithRange(img, x, y, w, h)
+      const cost = getDiffCost(srcPatch, compPatch)
   
-//   const colCount = Math.ceil((targetArea.w) / (TILE_SIZE.w - OVERLAP_AREA.w))
-//   const rowCount = Math.ceil((targetArea.h) / (TILE_SIZE.h - OVERLAP_AREA.h))
+      blocks.push({
+        x, y,
+        w, h,
+        cost
+      })
+    }
+  }
 
-//   const points = []
-  
-//   let i = 0;
-//   let ri = colCount
-//   let ci = rowCount
-  
-//   let size = rowCount + colCount
+  blocks.sort((a, b) => a.cost - b.cost) 
+  return blocks
+}
 
-//   let dx = 1, dy = 1
-//   let cursor = [-(TILE_SIZE.w - OVERLAP_AREA.w) - OVERLAP_AREA.w, - OVERLAP_AREA.h]
-//   let boxCount = 0
-//   for (let i = 0; i < size; i++) {
-//     if (!(i%2)) {
-//       const dx_ = dx
-//       const dy_ = 0
-  
-//       for (let j = 0; j < ri; j++) {
-//         cursor[0] += dx_ * (TILE_SIZE.w - OVERLAP_AREA.w)
-        
-//         const x = targetArea.x + cursor[0]
-//         const y = targetArea.y + cursor[1]
-//         points.push([x, y])
-//         boxCount++      
-//       }
-      
-//       dx *= -1
-//       ri--
-//     } else {
-//       const dy_ = dy
-//       const dx_ = 0
-  
-//       for (let j = 0; j < ci; j++) {
-//         cursor[1] += dy_ * (TILE_SIZE.h - OVERLAP_AREA.h)
-        
-//         const x = targetArea.x + cursor[0]
-//         const y = targetArea.y + cursor[1]
-//         points.push([x, y])
-  
-//         boxCount++
-//       }
-      
-//       dy *= -1
-//       ci--
-//     }
-//   }
-  
-//   return points
-// }
+function getDiffCost(src, comp) {
+  let cost = 0
+  for (let i = 0; i < src.length; i++) {
+    cost += Math.sqrt(Math.pow((src[i] - comp[i]), 2))
+  }
+  cost /= src.length
+  return cost
+}
+
+function cloneImageDataWithRange(target, x, y, w, h) {
+  const canvas = document.createElement('canvas')
+  canvas.width = target.width
+  canvas.height = target.height
+  const context = canvas.getContext('2d')
+
+  context.drawImage(target, 0, 0, target.width, target.height)
+  return context.getImageData(x, y, w, h).data
+}

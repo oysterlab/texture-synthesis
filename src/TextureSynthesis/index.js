@@ -8,8 +8,8 @@ class TextureSynthesis {
         this.edgeDetector = edgeDetector
 
         this.ITER_COUNT = 10000
-        this.TILE_SIZE = {w: 38, h: 38}
-        this.OVERLAP_AREA = {w: 18, h: 18}
+        this.TILE_SIZE = {w: 52, h: 52}
+        this.OVERLAP_AREA = {w: 12, h: 12}
     }
 
     synthesis(img, edgeResizeRatio, 
@@ -127,27 +127,27 @@ class TextureSynthesis {
 
         patchs.forEach((patchPos_, i) => {
             const targetTile = tiles[i]
-            targetTile[0] *= resizeRatio
-            targetTile[1] *= resizeRatio
+            targetTile[0] = parseInt(targetTile[0] * resizeRatio)
+            targetTile[1] = parseInt(targetTile[1] * resizeRatio)
 
             const TILE_SIZE = {
-                w: TILE_SIZE_.w * resizeRatio, 
-                h: TILE_SIZE_.h * resizeRatio
+                w: parseInt(TILE_SIZE_.w * resizeRatio), 
+                h: parseInt(TILE_SIZE_.h * resizeRatio)
             }
 
             const OVERLAP_AREA = {
-                w: OVERLAP_AREA_.w * resizeRatio,
-                h: OVERLAP_AREA_.h * resizeRatio
+                w: parseInt(OVERLAP_AREA_.w * resizeRatio),
+                h: parseInt(OVERLAP_AREA_.h * resizeRatio)
             }
 
-            const patchPos = [patchPos_[0] * resizeRatio, patchPos_[1] * resizeRatio]
+            const patchPos = [parseInt(patchPos_[0] * resizeRatio), parseInt(patchPos_[1] * resizeRatio)]
 
             const oriPatchImgData = context.getImageData(targetTile[0], targetTile[1], TILE_SIZE.w, TILE_SIZE.h)
             const findedPatchImgData = context.getImageData(patchPos[0], patchPos[1], TILE_SIZE.w, TILE_SIZE.h)
             
             const r = 1. //(OVERLAP_AREA.w > 4) ? 4 / OVERLAP_AREA.w : 1.
 
-//            const nextPatchImgData = this.seamPatch(oriPatchImgData, findedPatchImgData, TILE_SIZE, OVERLAP_AREA, r)
+            const nextPatchImgData = this.seamPatch(oriPatchImgData, findedPatchImgData, TILE_SIZE, OVERLAP_AREA, r)
             context.putImageData(findedPatchImgData, targetTile[0], targetTile[1])
         })
 
