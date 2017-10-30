@@ -8,8 +8,8 @@ class TextureSynthesis {
         this.edgeDetector = edgeDetector
 
         this.ITER_COUNT = 10000
-        this.TILE_SIZE = {w: 52, h: 52}
-        this.OVERLAP_AREA = {w: 12, h: 12}
+        this.TILE_SIZE = {w: 38, h: 38}
+        this.OVERLAP_AREA = {w: 16, h: 16}
     }
 
     synthesis(img, edgeResizeRatio, 
@@ -34,7 +34,12 @@ class TextureSynthesis {
                     
                     evaluation,
                 } = data
-    
+                
+                // this.TILE_SIZE.w = edgeTargetArea.x * 0.8
+                // this.TILE_SIZE.h = edgeTargetArea.y * 0.8
+                // this.OVERLAP_AREA.w = this.TILE_SIZE.w * 0.5
+                // this.OVERLAP_AREA.h = this.TILE_SIZE.h * 0.5
+
                 let tiles = this.getTilePositions(edgeTargetArea)
                 
                 if (radial) {
@@ -198,10 +203,28 @@ class TextureSynthesis {
 
             for (let i = 0; i < pt; i++) {
               const i4 = (i * TILE_SIZE.w + cx) * 4;
+              const ol = (originPatch.data[i4 + 0] * 0.2126 + originPatch.data[i4 + 1] * 0.7152 + originPatch.data[i4 + 2] * 0.0722) / 255.
+              const tl = (targetPatch.data[i4 + 0] * 0.2126 + targetPatch.data[i4 + 1] * 0.7152 + targetPatch.data[i4 + 2] * 0.0722) / 255.
+
+              const cv = Math.pow(ol - tl, 2)
+
               if (i <= minIdx) {
-                targetPatch.data[i4 + 0] = originPatch.data[i4 + 0]
-                targetPatch.data[i4 + 1] = originPatch.data[i4 + 1]
-                targetPatch.data[i4 + 2] = originPatch.data[i4 + 2]
+
+//                if (cv > 0.01) {
+                  // const g0 = targetPatch.data[i4 + 0] - originPatch.data[i4 + 0]
+                  // (g0 < 0) ? (-g0 / 255.) * originPatch.data[i4 + 0] + (1. - (-g0 / 255.)) + originPatch.data[i4 + 0] :
+                  // g0 / 255 * 
+
+                  targetPatch.data[i4 + 0] = (targetPatch.data[i4 + 0] + originPatch.data[i4 + 0]) / 2
+                  targetPatch.data[i4 + 1] = (targetPatch.data[i4 + 1] + originPatch.data[i4 + 1]) / 2
+                  targetPatch.data[i4 + 2] = (targetPatch.data[i4 + 2] + originPatch.data[i4 + 2]) / 2
+                // } else { 
+                //   targetPatch.data[i4 + 0] = originPatch.data[i4 + 0]
+                //   targetPatch.data[i4 + 1] = originPatch.data[i4 + 1]
+                //   targetPatch.data[i4 + 2] = originPatch.data[i4 + 2]
+
+                // }
+
               }
             }
           }
@@ -230,16 +253,16 @@ class TextureSynthesis {
             for (let i = pr + 1; i < pr + OVERLAP_AREA.w; i++) {
               const i4 = (cy * TILE_SIZE.w + i) * 4;
               if (i >= minIdx) {
-                targetPatch.data[i4 + 0] = originPatch.data[i4 + 0]
-                targetPatch.data[i4 + 1] = originPatch.data[i4 + 1]
-                targetPatch.data[i4 + 2] = originPatch.data[i4 + 2]
+                targetPatch.data[i4 + 0] = (targetPatch.data[i4 + 0] + originPatch.data[i4 + 0]) / 2
+                targetPatch.data[i4 + 1] = (targetPatch.data[i4 + 1] + originPatch.data[i4 + 1]) / 2
+                targetPatch.data[i4 + 2] = (targetPatch.data[i4 + 2] + originPatch.data[i4 + 2]) / 2
               }
             }
             for (let i = pr + OVERLAP_AREA.w; i < TILE_SIZE.w; i++) {
               const i4 = (cy * TILE_SIZE.w + i) * 4;
-              targetPatch.data[i4 + 0] = originPatch.data[i4 + 0]
-              targetPatch.data[i4 + 1] = originPatch.data[i4 + 1]
-              targetPatch.data[i4 + 2] = originPatch.data[i4 + 2]
+              targetPatch.data[i4 + 0] = (targetPatch.data[i4 + 0] + originPatch.data[i4 + 0]) / 2
+              targetPatch.data[i4 + 1] = (targetPatch.data[i4 + 1] + originPatch.data[i4 + 1]) / 2
+              targetPatch.data[i4 + 2] = (targetPatch.data[i4 + 2] + originPatch.data[i4 + 2]) / 2
             }
           }
         }
@@ -266,18 +289,18 @@ class TextureSynthesis {
             for (let i = pb + 1; i < pb + OVERLAP_AREA.h; i++) {
               const i4 = (i * TILE_SIZE.w + cx) * 4;
             if (i >= minIdx) {
-                targetPatch.data[i4 + 0] = originPatch.data[i4 + 0]
-                targetPatch.data[i4 + 1] = originPatch.data[i4 + 1]
-                targetPatch.data[i4 + 2] = originPatch.data[i4 + 2]
-            }
+              targetPatch.data[i4 + 0] = (targetPatch.data[i4 + 0] + originPatch.data[i4 + 0]) / 2
+              targetPatch.data[i4 + 1] = (targetPatch.data[i4 + 1] + originPatch.data[i4 + 1]) / 2
+              targetPatch.data[i4 + 2] = (targetPatch.data[i4 + 2] + originPatch.data[i4 + 2]) / 2
+          }
             }
 
             for (let i = pb + OVERLAP_AREA.h; i < TILE_SIZE.h; i++) {
               const i4 = (i * TILE_SIZE.w + cx) * 4;
-              targetPatch.data[i4 + 0] = originPatch.data[i4 + 0]
-              targetPatch.data[i4 + 1] = originPatch.data[i4 + 1]
-              targetPatch.data[i4 + 2] = originPatch.data[i4 + 2]
-            }
+              targetPatch.data[i4 + 0] = (targetPatch.data[i4 + 0] + originPatch.data[i4 + 0]) / 2
+              targetPatch.data[i4 + 1] = (targetPatch.data[i4 + 1] + originPatch.data[i4 + 1]) / 2
+              targetPatch.data[i4 + 2] = (targetPatch.data[i4 + 2] + originPatch.data[i4 + 2]) / 2
+          }
           }
         }
 
@@ -303,9 +326,9 @@ class TextureSynthesis {
             for (let i = 0; i < pl; i++) {
               const i4 = (cy * TILE_SIZE.w + i) * 4;
               if (i <= minIdx) {
-                targetPatch.data[i4 + 0] = originPatch.data[i4 + 0]
-                targetPatch.data[i4 + 1] = originPatch.data[i4 + 1]
-                targetPatch.data[i4 + 2] = originPatch.data[i4 + 2]
+                targetPatch.data[i4 + 0] = (targetPatch.data[i4 + 0] + originPatch.data[i4 + 0]) / 2
+                targetPatch.data[i4 + 1] = (targetPatch.data[i4 + 1] + originPatch.data[i4 + 1]) / 2
+                targetPatch.data[i4 + 2] = (targetPatch.data[i4 + 2] + originPatch.data[i4 + 2]) / 2
               }
             }
           }
@@ -326,7 +349,7 @@ class TextureSynthesis {
     nextPatch(srcImgData, resultImgData, targetTile, samplingSides) {
         const { evaluation } = this.data
 
-        const randoms = this.getRandomPatchPositions(samplingSides)
+        const randoms = this.getRandomPatchPositions_(samplingSides)
         return new Promise((resolve) => {
             
             const startTime = new Date()

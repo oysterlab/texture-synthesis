@@ -2,26 +2,24 @@ import TextureSynthesis from './TextureSynthesis'
 
 const startTime = new Date()
 const oriImg = new Image()
-oriImg.src = 'resources/real_wall_resize.jpg'
+oriImg.src = 'resources/rily_shadow.jpg' //'resources/temp_204910.jpg'
 oriImg.onload = () => {
 
   const ts1 = new TextureSynthesis()
 
 
   const r = 512 / oriImg.width
-  
-    ts1.synthesis(oriImg, r, {
-      radial: false,
-      withEdge: false,
-      debug: true
-    }).then((result) => {
 
-      ts1.TILE_SIZE.w = 60
-      ts1.TILE_SIZE.h = 60
-      document.body.appendChild(result)
-  
-      console.log( ((new Date()) - startTime) / 1000 + 's')
-    })
+  ts1.synthesis(oriImg, r, {
+    radial: false,
+    withEdge: false,
+    debug: true
+  }).then((result) => {
+
+    document.body.appendChild(result)
+
+    console.log( ((new Date()) - startTime) / 1000 + 's')
+  })
 
   // const r = 512 / oriImg.width
   // ts.resizeImage(oriImg, r).then((resizedImg) => {
